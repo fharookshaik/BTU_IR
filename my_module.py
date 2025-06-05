@@ -1,8 +1,10 @@
 """
 TODO: Write the folllowing components
 
-1. load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
-
+[x]1. load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
+[ ]2. Handle Data Processing - Stopword Elimination, Stemming, Tokenization
+[ ]3. 
+[ ]4.
 
 """
 
@@ -38,86 +40,52 @@ class gutenbergParser:
         self.end_line = end_line
         self.search_pattern = search_pattern
 
-        # Document Class essentials
-        self.title = None
-        self.raw_text = self._fetch_raw_text()
-        self.main_text = self._get_main_text(text=self.raw_text)
-        self.terms = None
-        self._filtered_terms = None
-        self._stemmed_terms = None
-        self._filtered_stemmed_terms = None
-
-
-        self.documents = None
+        # Full Text  Helper Variables
+        self.full_text = self._fetch_full_text()
+        self.chapter_text = self.full_text.splitlines()[self.start_line: self.end_line]
+        self.chapters = self._split_chapters(self.chapter_text)
 
     
-    def _fetch_raw_text(self):
+    def _fetch_full_text(self):
         req = Request(self.url)
         with urlopen(req) as res:
-            return(res.read().decode('utf-8'))
-        
-    def _get_main_text(self, text: str):
-        start_marker = "*** START OF THIS PROJECT"
-        end_marker = "*** END OF THIS PROJECT"
+            return res.read().decode('utf-8')
+    
+    def _split_chapters(self, chapter_lines):
+        full_chapter_text = '\n'.join(chapter_lines)
+        raw_chapters = re.split(r'\n{4,}', full_chapter_text.strip())
 
-        start = text.find(start_marker)
-        end = text.find(end_marker)
-
-        if start == -1 or end == -1:
-            return text.strip()
-        
-        start = text.index("\n", start) + 1
-        return text[start:end].strip()
-
-    def _split_chapters(self, text: str):
-        lines = text.splitlines()
-        current_title = None
-        current_lines = []
         documents = []
+
         document_id = 0
 
-        for line in lines:
-            line_strip = line.strip()
-            if line_strip.isupper() and len(line_strip.split()) >= 2:
-                if current_title and current_lines:
-                    chapter_text = '\n'.join(current_lines).strip()
-                    self.terms = self._tokenize(chapter_text)
-                    documents.append(Document(
-                        document_id=document_id,
-                        title=current_title,
-                        raw_text=chapter_text,
-                        author=self.author,
-                        origin=self.origin
-                    ))
-                    document_id += 1
+        for chapter in raw_chapters:
+            chapter_parts = [line.strip() for line in chapter.split('\n') if line.strip()]
+            if not chapter_parts:
+                continue
+        
+            chapter_title = chapter_parts[0]
+            chapter_content = '\n'.join(chapter_parts[1:])
 
-                #Start new document
-                current_title = line_strip
-                current_lines = []
-            elif current_title:
-                current_lines.append(line)
-
-        #last doc
-        if current_title and current_lines:
-            chapter_text = '\n'.join(current_lines).strip()
-            self.terms = self._tokenize(chapter_text)
             documents.append(Document(
-                    document_id=document_id,
-                    title=current_title,
-                    raw_text=chapter_text,
-                    author=self.author,
-                    origin=self.origin
-                ))
+                document_id=document_id, 
+                title=chapter_title, 
+                raw_text=chapter_content.strip(),
+                terms=chapter_content.replace('\n',' ').split(),
+                author=self.author,
+                origin=self.origin)
+                )
 
+            document_id += 1
+
+            # chapters.append((chapter_title, chapter_content.strip()))
+        
         return documents
 
-    def _parse(self):
-        header = self.main_text[:1000]
-        for line in header.splitlines():
-            if line.lower().startswith("author"):
-                author = line.split(":", 1)[1].strip()
-        
+    def get_documents(self):
+        self.documents = self._split_chapters(chapter_lines=self.chapter_text)
 
+        return self.documents
 
     def _tokenize(self,content : str) -> list[str]:
         #Tokenize
@@ -130,7 +98,6 @@ class gutenbergParser:
 
 def load_collection_from_url(url, author, origin, start_line, end_line, search_pattern=None):
     parser = gutenbergParser(url, author, origin, start_line, end_line, search_pattern)
-    return parser.documents
-
-
+    documents =  parser.get_documents()
+    return documents
 
