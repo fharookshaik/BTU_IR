@@ -3,8 +3,9 @@ TODO: Write the folllowing components
 
 [x]1. load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
 [ ]2. Handle Data Processing - Stopword Elimination, Stemming, Tokenization
-[ ]3. 
-[ ]4.
+[ ]3. remove_stop_words(doc.terms, stopwords)
+[ ]4. remove_stop_words_by_frequency(doc.terms, collection, low_freq=rare_frequency, high_freq=common_frequency)
+[ ]5. linear_boolean_search(term, collection, stopword_filtered)
 
 """
 
@@ -42,8 +43,7 @@ class gutenbergParser:
 
         # Full Text  Helper Variables
         self.full_text = self._fetch_full_text()
-        self.chapter_text = self.full_text.splitlines()[self.start_line: self.end_line]
-        self.chapters = self._split_chapters(self.chapter_text)
+        self.chapter_text = '\n'.join(self.full_text.splitlines()[self.start_line: self.end_line])
 
     
     def _fetch_full_text(self):
@@ -51,39 +51,27 @@ class gutenbergParser:
         with urlopen(req) as res:
             return res.read().decode('utf-8')
     
-    def _split_chapters(self, chapter_lines):
-        full_chapter_text = '\n'.join(chapter_lines)
-        raw_chapters = re.split(r'\n{4,}', full_chapter_text.strip())
+    def _split_chapters(self, chapter_text, search_pattern):
+        chapter_parts = search_pattern.findall(chapter_text)
 
         documents = []
-
         document_id = 0
 
-        for chapter in raw_chapters:
-            chapter_parts = [line.strip() for line in chapter.split('\n') if line.strip()]
-            if not chapter_parts:
-                continue
-        
-            chapter_title = chapter_parts[0]
-            chapter_content = '\n'.join(chapter_parts[1:])
-
+        for chapter_title, chapter_content in chapter_parts:
             documents.append(Document(
-                document_id=document_id, 
-                title=chapter_title, 
-                raw_text=chapter_content.strip(),
-                terms=chapter_content.replace('\n',' ').split(),
+                document_id= document_id,
+                title = chapter_title,
+                raw_text = chapter_content.strip(),
+                terms = chapter_content.replace('\n',' ').split(),
                 author=self.author,
                 origin=self.origin)
-                )
-
+            )
             document_id += 1
-
-            # chapters.append((chapter_title, chapter_content.strip()))
         
         return documents
 
     def get_documents(self):
-        self.documents = self._split_chapters(chapter_lines=self.chapter_text)
+        self.documents = self._split_chapters(chapter_text=self.chapter_text, search_pattern=self.search_pattern)
 
         return self.documents
 
@@ -96,8 +84,19 @@ class gutenbergParser:
         return [word.lower() for word in content.split() if word]
 
 
-def load_collection_from_url(url, author, origin, start_line, end_line, search_pattern=None):
-    parser = gutenbergParser(url, author, origin, start_line, end_line, search_pattern)
+def load_collection_from_url(url, author, origin, start_line, end_line, search_pattern):
+    parser = gutenbergParser(url=url, author=author, origin=origin, start_line=start_line, end_line=end_line, search_pattern=search_pattern)
     documents =  parser.get_documents()
     return documents
 
+
+def remove_stop_words(terms, stopwords):
+    return []
+
+
+def remove_stop_words_by_frequency(terms, collection, low_freq, high_freq):
+    return []
+
+
+def linear_boolean_search(term, collection, stopword_filtered):
+    return None

@@ -83,7 +83,7 @@ def load_documents_from_url(url: str, author: str, origin: str, start_line: int,
 
     # The following code is an example. You may replace it how you see fit:
     from my_module import load_collection_from_url
-    return load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
+    return load_collection_from_url(url=url, search_pattern=search_pattern, start_line=start_line, end_line=end_line, author=author, origin=origin)
 
 
 def linear_boolean_search(term, collection, stopword_filtered=False):
