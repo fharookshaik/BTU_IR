@@ -29,7 +29,7 @@ def remove_stopwords_by_list(doc: Document, stopwords: set[str]):
 
     # The following code is an example. You may replace it how you see fit:
     from my_module import remove_stop_words
-    doc.filtered_terms = remove_stop_words(doc.terms, stopwords)
+    doc.filtered_terms = remove_stop_words(doc.terms, stopwords) # type: ignore
 
 
 def remove_stopwords_by_frequency(doc, collection: list[Document], common_frequency: float, rare_frequency: float):

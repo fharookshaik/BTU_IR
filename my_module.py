@@ -1,11 +1,11 @@
 """
 TODO: Write the folllowing components
 
-[x]1. load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
-[ ]2. Handle Data Processing - Stopword Elimination, Stemming, Tokenization
-[ ]3. remove_stop_words(doc.terms, stopwords)
-[ ]4. remove_stop_words_by_frequency(doc.terms, collection, low_freq=rare_frequency, high_freq=common_frequency)
-[ ]5. linear_boolean_search(term, collection, stopword_filtered)
+[X]1. load_collection_from_url(url, search_pattern, start_line, end_line, author, origin)
+[!]2. Handle Data Processing - Stopword Elimination, Stemming, Tokenization
+[X]3. remove_stop_words(doc.terms, stopwords)
+[X]4. remove_stop_words_by_frequency(doc.terms, collection, low_freq=rare_frequency, high_freq=common_frequency)
+[X]5. linear_boolean_search(term, collection, stopword_filtered)
 
 """
 
@@ -26,10 +26,20 @@ self.origin = origin
 """
 
 from urllib.request import urlopen, Request
-import re
+from collections import defaultdict
 from document import Document
 
-PUNCT = '.,!?;:"\'()[]{}'
+# Global Variables
+PUNCT = '.,!?;:"“”\'()[]{}'
+
+
+class DataPreprocess:
+    def __init__(self, doc: Document) -> None:
+        pass
+
+
+
+
 
 
 class gutenbergParser:
@@ -62,7 +72,7 @@ class gutenbergParser:
                 document_id= document_id,
                 title = chapter_title,
                 raw_text = chapter_content.strip(),
-                terms = chapter_content.replace('\n',' ').split(),
+                terms = self._tokenize(chapter_content),
                 author=self.author,
                 origin=self.origin)
             )
@@ -84,19 +94,73 @@ class gutenbergParser:
         return [word.lower() for word in content.split() if word]
 
 
+
+# Main Functions compatible with test_wrapper
+
 def load_collection_from_url(url, author, origin, start_line, end_line, search_pattern):
     parser = gutenbergParser(url=url, author=author, origin=origin, start_line=start_line, end_line=end_line, search_pattern=search_pattern)
     documents =  parser.get_documents()
+    # print(parser._tokenize(documents[0].raw_text))
     return documents
 
 
-def remove_stop_words(terms, stopwords):
-    return []
+def remove_stop_words(terms, stopwords=None):
+    if stopwords is not None:
+        return [term.lower() for term in terms if term.lower() not in stopwords]
+
+    with open('helpers/stopwords.txt','r') as src:
+        stopwords = [line.strip() for line in src.readlines()]
+
+    return [term.lower() for term in terms if term.lower() not in stopwords]    
 
 
 def remove_stop_words_by_frequency(terms, collection, low_freq, high_freq):
-    return []
+
+    # Count total document frequency of each term    
+    term_doc_freq = defaultdict(int)
+
+    for doc in collection:
+        unique_terms = set(doc.terms)
+        for term in unique_terms:
+            term_doc_freq[term] += 1
+        
+
+    # Compute frequency percentile thresholds
+    term_freqs = list(term_doc_freq.values())
+    term_freqs.sort()
+
+    percentile = lambda p: term_freqs[min(int(p * len(term_freqs)), len(term_freqs) - 1)]
+
+    # def percentile(p):
+    #     idx = int(p * len(term_freqs))
+    #     return term_freqs[min(idx, len(term_freqs) - 1)]
+    
+    min_thresold = percentile(low_freq)
+    max_thresold = percentile(high_freq)
 
 
-def linear_boolean_search(term, collection, stopword_filtered):
-    return None
+    # Determine stop words (too rare or too frequent)
+    stopwords = {
+        term for term, freq in term_doc_freq.items() if freq <= min_thresold or freq >= max_thresold
+    }
+
+    # Filter terms from given list
+    return [term for term in terms if term not in stopwords]
+
+
+def linear_boolean_search(term, collection, stopword_filtered=False):
+    result = []
+    term = term.lower()
+
+    for doc in collection:
+        if stopword_filtered:
+            terms_to_search = doc.filtered_terms
+        else:
+            terms_to_search = doc.terms
+        
+        terms_lower = [t.lower() for t in terms_to_search]
+        score = terms_lower.count(term)
+
+        result.append((score, doc))
+    
+    return result
