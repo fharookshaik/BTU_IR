@@ -1,6 +1,6 @@
 # Information Retrieval - Practical Task 2
 # Wrapper for Unit Tests
-# Version 1.0 (2025-05-24)
+# Version 1.1 (2025-06-04)
 
 # You must implement this file so that the test suite can run your code.
 # This file acts as a bridge between your individual implementation and the expected interface.
@@ -29,7 +29,7 @@ def remove_stopwords_by_list(doc: Document, stopwords: set[str]):
 
     # The following code is an example. You may replace it how you see fit:
     from my_module import remove_stop_words
-    doc.filtered_terms = remove_stop_words(doc.terms, stopwords) # type: ignore
+    doc._filtered_terms = remove_stop_words(doc.terms, stopwords)
 
 
 def remove_stopwords_by_frequency(doc, collection: list[Document], common_frequency: float, rare_frequency: float):
@@ -54,7 +54,7 @@ def remove_stopwords_by_frequency(doc, collection: list[Document], common_freque
     # remove_stopwords_by_frequency(doc, collection, common_frequency, rare_frequency)
 
     from my_module import remove_stop_words_by_frequency
-    doc.filtered_terms = remove_stop_words_by_frequency(doc.terms, collection, low_freq=rare_frequency, high_freq=common_frequency)
+    doc._filtered_terms = remove_stop_words_by_frequency(doc.terms, collection, low_freq=rare_frequency, high_freq=common_frequency)
 
 
 def load_documents_from_url(url: str, author: str, origin: str, start_line: int, end_line: int,
