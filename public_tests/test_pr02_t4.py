@@ -31,11 +31,13 @@ class TestTask2StopWords(unittest.TestCase):
         self.assertEqual(doc.filtered_terms, ["quick", "brown", "fox"])
 
     def test_stopwords_by_frequency(self):
-        d1 = Document(0, "D1", "a a a a a b", ["a", "a", "a", "a", "a", "b"], "Author", "Source")
-        d2 = Document(1, "D2", "c d e f", ["c", "d", "e", "f"], "Author", "Source")
-        d3 = Document(2, "D3", "a f g", ["a", "f", "g"], "Author", "Source")
+        d1 = Document(0, "D1", "a a a a a b", ["a", "a", "a", "a", "a", "b", "e"], "Author", "Source")
+        d2 = Document(1, "D2", "c d e f", ["a", "c", "d", "e", "f"], "Author", "Source")
+        d3 = Document(2, "D3", "a f g d d", ["a", "f", "g", "d", "d"], "Author", "Source")
+        d4 = Document(2, "D4", "a b b f", ["a", "b", "b", "f"], "Author", "Source")
+        d5 = Document(2, "D5", "a b b c f", ["a", "b", "b", "c", "f"], "Author", "Source")
 
-        test_wrapper.remove_stopwords_by_frequency(d3, [d1, d2, d3], 0.1, 0.9)
+        test_wrapper.remove_stopwords_by_frequency(d3, [d1, d2, d3, d4, d5], rare_frequency=.2, common_frequency=.9)
         self.assertIsInstance(d3.filtered_terms, list)
         self.assertTrue(all(isinstance(t, str) for t in d3.filtered_terms))
         self.assertNotIn("a", d3.filtered_terms)  # a is very frequent

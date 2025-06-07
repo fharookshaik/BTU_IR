@@ -1,0 +1,402 @@
+[
+  {
+    "doc_id": 1,
+    "url": "https://www.gutenberg.org/files/1342/1342-0.txt",
+    "author": "Jane Austen",
+    "origin": "Pride and Prejudice",
+    "start_line": 39,
+    "end_line": 14567
+  },
+  {
+    "doc_id": 2,
+    "url": "https://www.gutenberg.org/files/11/11-0.txt",
+    "author": "Lewis Carroll",
+    "origin": "Alice's Adventures in Wonderland",
+    "start_line": 24,
+    "end_line": 3331
+  },
+  {
+    "doc_id": 3,
+    "url": "https://www.gutenberg.org/files/1661/1661-0.txt",
+    "author": "Arthur Conan Doyle",
+    "origin": "The Adventures of Sherlock Holmes",
+    "start_line": 42,
+    "end_line": 8924
+  },
+  {
+    "doc_id": 4,
+    "url": "https://www.gutenberg.org/files/84/84-0.txt",
+    "author": "Mary Shelley",
+    "origin": "Frankenstein",
+    "start_line": 37,
+    "end_line": 7742
+  },
+  {
+    "doc_id": 5,
+    "url": "https://www.gutenberg.org/files/2701/2701-0.txt",
+    "author": "Herman Melville",
+    "origin": "Moby Dick",
+    "start_line": 45,
+    "end_line": 23245
+  },
+  {
+    "doc_id": 6,
+    "url": "https://www.gutenberg.org/files/98/98-0.txt",
+    "author": "Charles Dickens",
+    "origin": "A Tale of Two Cities",
+    "start_line": 41,
+    "end_line": 15679
+  },
+  {
+    "doc_id": 7,
+    "url": "https://www.gutenberg.org/files/345/345-0.txt",
+    "author": "Bram Stoker",
+    "origin": "Dracula",
+    "start_line": 38,
+    "end_line": 15572
+  },
+  {
+    "doc_id": 8,
+    "url": "https://www.gutenberg.org/files/174/174-0.txt",
+    "author": "Oscar Wilde",
+    "origin": "The Picture of Dorian Gray",
+    "start_line": 36,
+    "end_line": 8713
+  },
+  {
+    "doc_id": 9,
+    "url": "https://www.gutenberg.org/files/2542/2542-0.txt",
+    "author": "Arthur Conan Doyle",
+    "origin": "A Study in Scarlet",
+    "start_line": 40,
+    "end_line": 6542
+  },
+  {
+    "doc_id": 10,
+    "url": "https://www.gutenberg.org/files/5200/5200-0.txt",
+    "author": "Franz Kafka",
+    "origin": "Metamorphosis",
+    "start_line": 22,
+    "end_line": 1421
+  },
+  {
+    "doc_id": 11,
+    "url": "https://www.gutenberg.org/files/1952/1952-0.txt",
+    "author": "Charlotte Perkins Gilman",
+    "origin": "The Yellow Wallpaper",
+    "start_line": 18,
+    "end_line": 623
+  },
+  {
+    "doc_id": 12,
+    "url": "https://www.gutenberg.org/files/43/43-0.txt",
+    "author": "Robert Louis Stevenson",
+    "origin": "The Strange Case of Dr. Jekyll and Mr. Hyde",
+    "start_line": 33,
+    "end_line": 2419
+  },
+  {
+    "doc_id": 13,
+    "url": "https://www.gutenberg.org/files/1232/1232-0.txt",
+    "author": "Niccolò Machiavelli",
+    "origin": "The Prince",
+    "start_line": 29,
+    "end_line": 3421
+  },
+  {
+    "doc_id": 14,
+    "url": "https://www.gutenberg.org/files/1080/1080-0.txt",
+    "author": "Jonathan Swift",
+    "origin": "A Modest Proposal",
+    "start_line": 15,
+    "end_line": 312
+  },
+  {
+    "doc_id": 15,
+    "url": "https://www.gutenberg.org/files/35/35-0.txt",
+    "author": "H.G. Wells",
+    "origin": "The Time Machine",
+    "start_line": 31,
+    "end_line": 4213
+  },
+  {
+    "doc_id": 16,
+    "url": "https://www.gutenberg.org/files/36/36-0.txt",
+    "author": "H.G. Wells",
+    "origin": "The War of the Worlds",
+    "start_line": 34,
+    "end_line": 6321
+  },
+  {
+    "doc_id": 17,
+    "url": "https://www.gutenberg.org/files/160/160-0.txt",
+    "author": "Mark Twain",
+    "origin": "The Adventures of Tom Sawyer",
+    "start_line": 37,
+    "end_line": 7842
+  },
+  {
+    "doc_id": 18,
+    "url": "https://www.gutenberg.org/files/76/76-0.txt",
+    "author": "Mark Twain",
+    "origin": "Adventures of Huckleberry Finn",
+    "start_line": 40,
+    "end_line": 11245
+  },
+  {
+    "doc_id": 19,
+    "url": "https://www.gutenberg.org/files/2591/2591-0.txt",
+    "author": "Brothers Grimm",
+    "origin": "Grimms' Fairy Tales",
+    "start_line": 27,
+    "end_line": 5231
+  },
+  {
+    "doc_id": 20,
+    "url": "https://www.gutenberg.org/files/2781/2781-0.txt",
+    "author": "Homer",
+    "origin": "The Odyssey",
+    "start_line": 43,
+    "end_line": 12456
+  },
+  {
+    "doc_id": 21,
+    "url": "https://www.gutenberg.org/files/28054/28054-0.txt",
+    "author": "Homer",
+    "origin": "The Iliad",
+    "start_line": 47,
+    "end_line": 15892
+  },
+  {
+    "doc_id": 22,
+    "url": "https://www.gutenberg.org/files/1497/1497-0.txt",
+    "author": "Plato",
+    "origin": "The Republic",
+    "start_line": 35,
+    "end_line": 8721
+  },
+  {
+    "doc_id": 23,
+    "url": "https://www.gutenberg.org/files/2600/2600-0.txt",
+    "author": "Leo Tolstoy",
+    "origin": "War and Peace",
+    "start_line": 49,
+    "end_line": 34215
+  },
+  {
+    "doc_id": 24,
+    "url": "https://www.gutenberg.org/files/2554/2554-0.txt",
+    "author": "Fyodor Dostoevsky",
+    "origin": "Crime and Punishment",
+    "start_line": 41,
+    "end_line": 18742
+  },
+  {
+    "doc_id": 25,
+    "url": "https://www.gutenberg.org/files/1399/1399-0.txt",
+    "author": "Leo Tolstoy",
+    "origin": "Anna Karenina",
+    "start_line": 44,
+    "end_line": 25678
+  },
+  {
+    "doc_id": 26,
+    "url": "https://www.gutenberg.org/files/205/205-0.txt",
+    "author": "W.E.B. Du Bois",
+    "origin": "The Souls of Black Folk",
+    "start_line": 32,
+    "end_line": 5214
+  },
+  {
+    "doc_id": 27,
+    "url": "https://www.gutenberg.org/files/408/408-0.txt",
+    "author": "Kate Chopin",
+    "origin": "The Awakening",
+    "start_line": 28,
+    "end_line": 6321
+  },
+  {
+    "doc_id": 28,
+    "url": "https://www.gutenberg.org/files/1400/1400-0.txt",
+    "author": "Charles Dickens",
+    "origin": "Great Expectations",
+    "start_line": 42,
+    "end_line": 18753
+  },
+  {
+    "doc_id": 29,
+    "url": "https://www.gutenberg.org/files/244/244-0.txt",
+    "author": "Henrik Ibsen",
+    "origin": "A Doll's House",
+    "start_line": 25,
+    "end_line": 3214
+  },
+  {
+    "doc_id": 30,
+    "url": "https://www.gutenberg.org/files/1524/1524-0.txt",
+    "author": "William Shakespeare",
+    "origin": "Hamlet",
+    "start_line": 37,
+    "end_line": 4872
+  },
+  {
+    "doc_id": 31,
+    "url": "https://www.gutenberg.org/files/2265/2265-0.txt",
+    "author": "William Shakespeare",
+    "origin": "Macbeth",
+    "start_line": 33,
+    "end_line": 2541
+  },
+  {
+    "doc_id": 32,
+    "url": "https://www.gutenberg.org/files/2264/2264-0.txt",
+    "author": "William Shakespeare",
+    "origin": "Romeo and Juliet",
+    "start_line": 35,
+    "end_line": 2987
+  },
+  {
+    "doc_id": 33,
+    "url": "https://www.gutenberg.org/files/2267/2267-0.txt",
+    "author": "William Shakespeare",
+    "origin": "Othello",
+    "start_line": 36,
+    "end_line": 3642
+  },
+  {
+    "doc_id": 34,
+    "url": "https://www.gutenberg.org/files/2266/2266-0.txt",
+    "author": "William Shakespeare",
+    "origin": "King Lear",
+    "start_line": 38,
+    "end_line": 4125
+  },
+  {
+    "doc_id": 35,
+    "url": "https://www.gutenberg.org/files/2680/2680-0.txt",
+    "author": "Marcus Aurelius",
+    "origin": "Meditations",
+    "start_line": 31,
+    "end_line": 2874
+  },
+  {
+    "doc_id": 36,
+    "url": "https://www.gutenberg.org/files/863/863-0.txt",
+    "author": "Oscar Wilde",
+    "origin": "The Importance of Being Earnest",
+    "start_line": 23,
+    "end_line": 2145
+  },
+  {
+    "doc_id": 37,
+    "url": "https://www.gutenberg.org/files/120/120-0.txt",
+    "author": "Robert Louis Stevenson",
+    "origin": "Treasure Island",
+    "start_line": 39,
+    "end_line": 7542
+  },
+  {
+    "doc_id": 38,
+    "url": "https://www.gutenberg.org/files/1184/1184-0.txt",
+    "author": "Alexandre Dumas",
+    "origin": "The Count of Monte Cristo",
+    "start_line": 47,
+    "end_line": 24567
+  },
+  {
+    "doc_id": 39,
+    "url": "https://www.gutenberg.org/files/1257/1257-0.txt",
+    "author": "Alexandre Dumas",
+    "origin": "The Three Musketeers",
+    "start_line": 43,
+    "end_line": 18742
+  },
+  {
+    "doc_id": 40,
+    "url": "https://www.gutenberg.org/files/215/215-0.txt",
+    "author": "Nathaniel Hawthorne",
+    "origin": "The Scarlet Letter",
+    "start_line": 37,
+    "end_line": 8742
+  },
+  {
+    "doc_id": 41,
+    "url": "https://www.gutenberg.org/files/219/219-0.txt",
+    "author": "Joseph Conrad",
+    "origin": "Heart of Darkness",
+    "start_line": 29,
+    "end_line": 4215
+  },
+  {
+    "doc_id": 42,
+    "url": "https://www.gutenberg.org/files/145/145-0.txt",
+    "author": "George Eliot",
+    "origin": "Middlemarch",
+    "start_line": 51,
+    "end_line": 28741
+  },
+  {
+    "doc_id": 43,
+    "url": "https://www.gutenberg.org/files/514/514-0.txt",
+    "author": "Louisa May Alcott",
+    "origin": "Little Women",
+    "start_line": 44,
+    "end_line": 15427
+  },
+  {
+    "doc_id": 44,
+    "url": "https://www.gutenberg.org/files/158/158-0.txt",
+    "author": "Jane Austen",
+    "origin": "Emma",
+    "start_line": 41,
+    "end_line": 16432
+  },
+  {
+    "doc_id": 45,
+    "url": "https://www.gutenberg.org/files/161/161-0.txt",
+    "author": "Jane Austen",
+    "origin": "Sense and Sensibility",
+    "start_line": 38,
+    "end_line": 14215
+  },
+  {
+    "doc_id": 46,
+    "url": "https://www.gutenberg.org/files/1260/1260-0.txt",
+    "author": "Charlotte Brontë",
+    "origin": "Jane Eyre",
+    "start_line": 42,
+    "end_line": 18742
+  },
+  {
+    "doc_id": 47,
+    "url": "https://www.gutenberg.org/files/768/768-0.txt",
+    "author": "Emily Brontë",
+    "origin": "Wuthering Heights",
+    "start_line": 39,
+    "end_line": 12457
+  },
+  {
+    "doc_id": 48,
+    "url": "https://www.gutenberg.org/files/164/164-0.txt",
+    "author": "Fyodor Dostoevsky",
+    "origin": "The Brothers Karamazov",
+    "start_line": 53,
+    "end_line": 28741
+  },
+  {
+    "doc_id": 49,
+    "url": "https://www.gutenberg.org/files/996/996-0.txt",
+    "author": "Miguel de Cervantes",
+    "origin": "Don Quixote",
+    "start_line": 57,
+    "end_line": 35421
+  },
+  {
+    "doc_id": 50,
+    "url": "https://www.gutenberg.org/files/1727/1727-0.txt",
+    "author": "Charles Darwin",
+    "origin": "On the Origin of Species",
+    "start_line": 45,
+    "end_line": 15427
+  }
+]
