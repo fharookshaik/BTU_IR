@@ -1,14 +1,38 @@
+# python main.py
+# This file is a part of Information Retreival system that allows users to interact with parsed documents and search for relevant information based on user queries.
+
 from document import Document
 from my_module import load_collection_from_url, remove_stop_words, remove_stop_words_by_frequency, linear_boolean_search
 import re
 import os
 
 class TerminalUI:
+    """
+        Terminal based User Interface for an Information Retreival system
+            
+        Provide interactive options to:
+        - Download and parse story collections from a URL
+        - View parsed documents
+        - Perform linear boolean search on documents
+        - Apply stopword filtering using a file or frequency-based method
+
+        """
     def __init__(self):
+        """
+        Initialize the TerminalUI instance
+
+        Attributes:
+            inputs (dict): Store paramenters entereb by user
+            documents (list): Stores parsed Documents objects
+        """
         self.inputs = {}
         self.documents = []
 
     def run(self):
+        """
+        Run the main menu loop for user interaction.
+        Displays a menu and handles user input for different functionalities.
+        """
         while True:
             print("\n=== Information Retrieval System ===")
             print("1. 📥 Download & Parse Story Collection")
@@ -34,6 +58,18 @@ class TerminalUI:
                 print("❌ Invalid choice. Please enter a number from 1 to 5.")
 
     def download_and_parse(self):
+        """
+        Prompt the user for parsing options and load documents from a given URL.
+
+        Collects:
+            - URL of the text source
+            - Start and end lines for reading
+            - Regex pattern for splitting stories
+            - Author and origin metadata
+
+        Updates:
+            self.documents with parsed Document objects.
+        """
         print("\n--- Download & Parse ---")
 
         self.inputs['url'] = input("Source URL: ").strip()
@@ -73,6 +109,11 @@ class TerminalUI:
             print(f"❌ Error during parsing: {e}")
 
     def view_documents(self):
+        """
+        Display a summary of parsed documents.
+
+        Allows the user to view the full raw text of a selected document by entering its ID.
+        """
         if not self.documents:
             print("\n⚠️ No documents parsed yet.")
             return
@@ -94,6 +135,11 @@ class TerminalUI:
             print("❌ Please enter a valid numeric ID.")
 
     def search_documents(self):
+        """
+        Perform a linear boolean search over the parsed documents.
+
+        Prompts the user for a search term and displays matching documents along with relevance scores.
+        """
         if not self.documents:
             print("\n⚠️ Please parse documents first.")
             return
@@ -113,6 +159,15 @@ class TerminalUI:
             print(f"❌ Error during search: {e}")
 
     def stopword_removal(self):
+        """
+        Perform stopword filtering on document terms.
+
+        Offers two options:
+            1. Use an external or internal stopword file.
+            2. Use frequency-based filtering with user-defined thresholds.
+
+        Updates each document's `filtered_terms` attribute.
+        """
         if not self.documents:
             print("\n⚠️ Please parse documents first.")
             return
@@ -170,6 +225,7 @@ class TerminalUI:
                 print("❌ Invalid document ID.")
         elif doc_id_input:
             print("❌ Please enter a valid numeric ID.")
+
 
 # Run the terminal UI
 if __name__ == "__main__":
