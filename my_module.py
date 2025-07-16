@@ -1,6 +1,7 @@
 from urllib.request import urlopen, Request
 from collections import defaultdict
 from document import Document
+import re
 
 # Global constant for punctuation symbols to be removed during tokenization
 PUNCT = '.,!?;:"“”\'()[]{}'
@@ -223,3 +224,212 @@ def linear_boolean_search(term, collection, stopword_filtered=False):
         result.append((score, doc))
     
     return result
+
+
+class PorterStemmer:
+    def __init__(self) -> None:
+        # RULES
+        self.STEP1A_RULES = [
+            (r'sses', 'ss', lambda s: True),
+            (r'ies', 'i', lambda s: True),
+            (r'ss', 'ss', lambda s: True),
+            (r's', '', lambda s: True),
+        ]
+
+        self.STEP1B_RULES = [
+            (r'eed', 'ee', lambda s: self._get_measure(s) > 0),
+            (r'ed', '', lambda s: self._contains_vowel(s)),
+            (r'ing', '', lambda s: self._contains_vowel(s)),
+        ]
+
+        self.STEP1B_RULES_EXT = [
+            (r'at$', 'ate'),
+            (r'bl$', 'ble'),
+            (r'iz$', 'ize')
+        ]
+
+        self.STEP1C_RULES = [
+            (r'y$', 'i')
+        ]
+
+        self.STEP2_RULES = [
+            (r'ational$', 'ate', lambda s: self._get_measure(s) > 0),
+            (r'tional$', 'tion', lambda s: self._get_measure(s) > 0),
+            (r'enci$', 'ence', lambda s: self._get_measure(s) > 0),
+            (r'anci$', 'ance', lambda s: self._get_measure(s) > 0),
+            (r'izer$', 'ize', lambda s: self._get_measure(s) > 0),
+            (r'abli$', 'able', lambda s: self._get_measure(s) > 0),
+            (r'alli$', 'al', lambda s: self._get_measure(s) > 0),
+            (r'entli$', 'ent', lambda s: self._get_measure(s) > 0),
+            (r'eli$', 'e', lambda s: self._get_measure(s) > 0),
+            (r'ousli$', 'ous', lambda s: self._get_measure(s) > 0),
+            (r'ization$', 'ize', lambda s: self._get_measure(s) > 0),
+            (r'ation$', 'ate', lambda s: self._get_measure(s) > 0),
+            (r'ator$', 'ate', lambda s: self._get_measure(s) > 0),
+            (r'alism$', 'al', lambda s: self._get_measure(s) > 0),
+            (r'iveness$', 'ive', lambda s: self._get_measure(s) > 0),
+            (r'fulness$', 'ful', lambda s: self._get_measure(s) > 0),
+            (r'ousness$', 'ous', lambda s: self._get_measure(s) > 0),
+            (r'aliti$', 'al', lambda s: self._get_measure(s) > 0),
+            (r'iviti$', 'ive', lambda s: self._get_measure(s) > 0),
+            (r'biliti$', 'ble', lambda s: self._get_measure(s) > 0),
+            (r'xflurti$', 'xti', lambda s: self._get_measure(s) > 0),
+        ]
+
+        self.STEP3_RULES = [
+            (r'icate$', 'ic', lambda s: self._get_measure(s) > 0),
+            (r'ative$', '', lambda s: self._get_measure(s) > 0),
+            (r'alize$', 'al', lambda s: self._get_measure(s) > 0),
+            (r'iciti$', 'ic', lambda s: self._get_measure(s) > 0),
+            (r'ical$', 'ic', lambda s: self._get_measure(s) > 0),
+            (r'ful$', '', lambda s: self._get_measure(s) > 0),
+            (r'ness$', '', lambda s: self._get_measure(s) > 0),
+        ]
+
+        self.STEP4_RULES = [
+            (r'al$', '', lambda s: self._get_measure(s) > 1),
+            (r'ance$', '', lambda s: self._get_measure(s) > 1),
+            (r'ence$', '', lambda s: self._get_measure(s) > 1),
+            (r'er$', '', lambda s: self._get_measure(s) > 1),
+            (r'ic$', '', lambda s: self._get_measure(s) > 1),
+            (r'able$', '', lambda s: self._get_measure(s) > 1),
+            (r'ible$', '', lambda s: self._get_measure(s) > 1),
+            (r'ant$', '', lambda s: self._get_measure(s) > 1),
+            (r'ement$', '', lambda s: self._get_measure(s) > 1),
+            (r'ment$', '', lambda s: self._get_measure(s) > 1),
+            (r'ent$', '', lambda s: self._get_measure(s) > 1),
+            (r'ion$', '', lambda s: self._get_measure(s) > 1 and s[-1].lower() in 'st'),
+            (r'ou$', '', lambda s: self._get_measure(s) > 1),
+            (r'ism$', '', lambda s: self._get_measure(s) > 1),
+            (r'ate$', '', lambda s: self._get_measure(s) > 1),
+            (r'iti$', '', lambda s: self._get_measure(s) > 1),
+            (r'ous$', '', lambda s: self._get_measure(s) > 1),
+            (r'ive$', '', lambda s: self._get_measure(s) > 1),
+            (r'ize$', '', lambda s: self._get_measure(s) > 1),
+        ]
+
+        self.STEP5A_RULES = [
+            (r'e$', '', lambda s: self._get_measure(s) > 1 or (self._get_measure(s) == 1 and not self._ends_with_cvc(s))),
+        ]
+
+        self.STEP5B_RULES = [
+            (r'll$', '', lambda s: self._get_measure(s) > 1 and self._ends_with_double_consonant(s) and self._get_measure(s[:-1]) > 1),
+        ]
+    
+    def _is_consonant(self, word, i):
+        """Check if the character at index i in word is a consonant."""
+        letter = word[i].lower()
+        if letter in 'aeiou':
+            return False
+        if letter == 'y':
+            return i == 0 or not self._is_consonant(word, i - 1)
+        return True
+
+    def _contains_vowel(self, stem):
+        """Check if the stem contains at least one vowel."""
+        for i in range(len(stem)):
+            if not self._is_consonant(stem, i):
+                return True
+        return False
+
+    def _ends_with_double_consonant(self, stem):
+        """Check if the stem ends with a double consonant."""
+        if len(stem) < 2:
+            return False
+        return (self._is_consonant(stem, len(stem) - 1) and 
+                self._is_consonant(stem, len(stem) - 2) and 
+                stem[-1].lower() == stem[-2].lower())
+
+    def _ends_with_cvc(self, stem):
+        """Check if the stem ends with consonant-vowel-consonant, where the last consonant is not w, x, or y."""
+        if len(stem) < 3:
+            return False
+        return (self._is_consonant(stem, len(stem) - 3)  and
+                not self._is_consonant(stem, len(stem) - 2) and 
+                self._is_consonant(stem, len(stem) - 1) and
+                stem[-1].lower() not in 'wxy')
+
+    def _apply_rule(self, word, pattern, replacement, condition):
+        """Apply a suffix removal rule using regex if the condition is met."""
+        match = re.search(pattern + '$', word, re.IGNORECASE)
+        if not match:
+            return word, False
+        stem = word[:match.start()]
+        if condition(stem):
+            return stem + replacement, True
+        return word, False
+
+    def _get_measure(self, word):
+        """Calculate the measure (m) of a word: number of VC sequences."""
+        m = 0
+        i = 0
+        # Find [C]
+        while i < len(word) and self._is_consonant(word, i):
+            i += 1
+        # Count VC sequences
+        while i < len(word):
+            # Must have at least one vowel
+            has_vowel = False
+            while i < len(word) and not self._is_consonant(word, i):
+                has_vowel = True
+                i += 1
+            if not has_vowel:
+                break
+            # Must have at least one consonant
+            has_consonant = False
+            while i < len(word) and self._is_consonant(word, i):
+                has_consonant = True
+                i += 1
+            if has_consonant and has_vowel:
+                m += 1
+        return m
+
+
+    def stem(self, word):
+        if not word:
+            return word
+        
+        # Apply Step_1A Rules
+        for pattern, replacement, condition in self.STEP1A_RULES:
+            new_word, applied = self._apply_rule(word, pattern, replacement, condition)
+            if applied:
+                word = new_word
+                break
+        
+        # Apply Step_1B Rules
+        applied_1b = False
+        for i, (pattern, replacement, condition) in enumerate(self.STEP1B_RULES):
+            new_word, applied = self._apply_rule(word, pattern, replacement, condition)
+            if applied:
+                word = new_word
+                if i in (1,2):
+                    applied_1b = True
+                break
+        
+        if applied_1b:
+            for pattern, replacement in self.STEP1B_RULES_EXT:
+                if re.search(pattern, word, re.IGNORECASE):
+                    word = re.sub(pattern, replacement, word, flags=re.IGNORECASE)
+                    break
+
+            else:    
+                if self._ends_with_double_consonant(word) and word[-1].lower() not in 'lsz':
+                    word = word[:-1]
+                
+                elif self._get_measure(word) == 1 and self._ends_with_cvc(word):
+                    word = word + 'e'
+
+        # Apply Step_1C Rules
+        if re.search(r'y$', word, re.IGNORECASE) and self._contains_vowel(word[:-1]):
+            word = re.sub(r'y$', 'i', word, flags=re.IGNORECASE)
+
+        # Apply Step_2, Step_3 and Step_4, Step_5A, Step_5B Rules
+        SUBRULES = [self.STEP2_RULES, self.STEP3_RULES, self.STEP4_RULES, self.STEP5A_RULES, self.STEP5B_RULES]
+        for RULE in SUBRULES:
+            for pattern, replacement, condition in RULE:
+                new_word, applied = self._apply_rule(word, pattern, replacement, condition)
+                if applied:
+                    word = new_word
+                    break
+            
+        return word
