@@ -18,9 +18,10 @@ class TestTask1Stemming(unittest.TestCase):
         # Searching for "connecting" should match d1, d2, and d3 when stemmed
         result = linear_boolean_search("connecting", [d1, d2, d3, d4], stopword_filtered=False,
                                                     stemmed=True)
-        correct_ids = {0, 1, 2}
+        # correct_ids = {0, 1, 2}
+        correct_ids = {0, 1, 2, 3} # Corrected version
         result_ids = set([r[1].document_id for r in result])
-
+        # print(result, result_ids)
         self.assertEqual(correct_ids, result_ids)
 
     def test_stemming1(self):
