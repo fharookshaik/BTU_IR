@@ -2,9 +2,10 @@
 # This file is a part of Information Retreival system that allows users to interact with parsed documents and search for relevant information based on user queries.
 
 from document import Document
-from my_module import load_collection_from_url, remove_stop_words, remove_stop_words_by_frequency, linear_boolean_search, vector_space_search
+from my_module import load_collection_from_url, remove_stop_words, remove_stop_words_by_frequency, linear_boolean_search, vector_space_search, precision_recall
 import re
 import os
+import json
 
 class TerminalUI:
     """
@@ -27,35 +28,128 @@ class TerminalUI:
         """
         self.inputs = {}
         self.documents = []
+        # self.ground_truth = self._load_ground_truth()
+
+    def _load_ground_truth(self, file):
+        """Load the document ids from the ground truth file for calcuating precision and recall score.
+        """
+        ground_truth = {}
+        # ground_truth_files = ['grimm_ground_truth.json', 'aesop_ground_truth.json']
+        
+        try:
+            if os.path.exists(file):
+                with open(f'{file}','r') as f:
+                    ground_truth.update(json.load(f))
+                    ground_truth = {k.lower(): [int(val.split('_')[0]) for val in v] for k, v in ground_truth.items()}
+                print(f"{file} ground truth loaded.")
+            else:
+                print(f"{file} ground truth Not Loaded")
+        
+        except json.JSONDecodeError:
+            print(f" Error decoding JSON from {file}")
+        except Exception as e:
+            print(f"Error loading {file} : {e}")
+
+        return ground_truth
+    
+
+    def _run_demo(self):
+        aesops = {
+            'url': 'https://www.gutenberg.org/files/21/21-0.txt',
+            'author': 'Aesop',
+            'origin': 'Aesop’s Fables',
+            'start_line': 845,
+            'end_line': 5953,
+            'search_pattern': r'([^\n]+)\n\n(.*?)(?=\n{5}(?=[^\n]+\n\n)|$)',
+            'ground_truth_file' : os.path.join('data','gt_aesop.json')
+        }
+
+        grimm = {
+            'url': 'https://www.gutenberg.org/files/2591/2591-0.txt',
+            'author': 'Jacob and Wilhelm Grimm',
+            'origin': 'Grimms\' Fairy Tales',
+            'start_line': 123,
+            'end_line': 9239,
+            'search_pattern': r"([A-Z0-9 ,.'!?-]+)\n{3}(.*?)(?=\n{5}|$)",
+            'ground_truth_file' : os.path.join('data','gt_grimm.json')
+        }
+        
+        while True:
+            print("\n--- Example Test Case ---")
+            print("\n 1. Aesop's Fables")
+            print("\n 2. Grimms' Fairy Tales")
+
+            choice = input("\nSelect an action (1–2): ").strip()
+
+            if choice == '1':
+                # TODO: Implement the aesops logic
+                self.inputs = aesops
+ 
+            elif choice == '2':
+                # TODO: Implement the grimm logic
+                self.inputs = grimm
+                
+            else:
+                print("❌ Invalid choice. Please enter a number from 1 to 2.")
+                break
+
+            print("\n--- Download & Parse ---")
+            print(f"\nSource URL: {self.inputs['url']}")
+            print(f"Start line: {self.inputs['start_line']}")
+            print(f"End line: {self.inputs['end_line']}")
+            print(f"Story Separator / Search Pattern: {self.inputs['search_pattern']}")
+            print(f"Author name: {self.inputs['author']}")
+            print(f"Book/source origin: {self.inputs['origin']}")
+
+
+            self.documents = load_collection_from_url(
+                url=self.inputs['url'],
+                author=self.inputs['author'],
+                origin=self.inputs['origin'],
+                start_line=self.inputs['start_line'],
+                end_line=self.inputs['end_line'],
+                search_pattern= re.compile(self.inputs['search_pattern'], re.DOTALL) 
+            )
+            print(f"\n✅ Parsed {len(self.documents)} documents.")
+            
+            return    
+        
 
     def run(self):
         """
         Run the main menu loop for user interaction.
         Displays a menu and handles user input for different functionalities.
         """
+        demo = False
+
         while True:
             print("\n=== Information Retrieval System ===")
+            print("0. 🟢 View Example Test Case")
             print("1. 📥 Download & Parse Story Collection")
             print("2. 📚 View Parsed Documents")
             print("3. 🔍 Search Documents")
             print("4. 🛑 Stop Word Removal")
             print("5. ❌ Exit")
 
-            choice = input("Select an action (1–5): ").strip()
+            choice = input("Select an action (0–5): ").strip()
+
+            if choice == '0':
+                demo = True
+                self._run_demo()
 
             if choice == '1':
                 self.download_and_parse()
             elif choice == '2':
                 self.view_documents()
             elif choice == '3':
-                self.search_documents()
+                self.search_documents(demo=demo)
             elif choice == '4':
                 self.stopword_removal()
             elif choice == '5':
                 print("Goodbye!")
                 break
             else:
-                print("❌ Invalid choice. Please enter a number from 1 to 5.")
+                print("❌ Invalid choice. Please enter a number from 0 to 5.")
 
     def download_and_parse(self):
         """
@@ -134,7 +228,7 @@ class TerminalUI:
         elif doc_id_input:
             print("❌ Please enter a valid numeric ID.")
 
-    def search_documents(self):
+    def search_documents(self, demo=False):
         """
         Perform a linear boolean search over the parsed documents.
 
@@ -189,9 +283,33 @@ class TerminalUI:
                 for score, doc in results:
                     print(f" - {doc} : {score}")
                 
+                if demo:
+                    self._calculate_and_print_precision_recall(term, results)
+                    
                 return
             except Exception as e:
                 print(f"❌ Error during search: {e}")
+
+
+    def _calculate_and_print_precision_recall(self, term, retrieved_results,):
+        """Calculates and prints precision and recall for a given query."""
+        print("\n--- Evaluation ---")
+        ground_truth = self._load_ground_truth(file=self.inputs['ground_truth_file'])
+        if term in ground_truth.keys():
+            # Get the set of retrieved document IDs
+            retrieved_doc_ids = {doc.document_id for score, doc in retrieved_results}
+
+            # Get the set of relevant document IDs from ground truth
+            relevant_doc_ids = set(ground_truth[term])
+
+            # Calculate precision and recall
+            precision, recall = precision_recall(retrieved=retrieved_doc_ids, relevant=relevant_doc_ids)
+
+            print(f"\nPrecision: {precision:.4f}")
+            print(f"Recall:    {recall:.4f}")
+        else:
+            print("\nPrecision: -1.0000 (term not in ground truth)")
+            print("Recall:    -1.0000 (term not in ground truth)")
 
     def stopword_removal(self):
         """

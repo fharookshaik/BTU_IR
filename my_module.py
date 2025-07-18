@@ -272,13 +272,13 @@ class PorterStemmer:
     
 
     def stem(self, word):
-        """_summary_
+        """Stem the word based on the Porter Stemmer Rules
 
         Args:
-            word (_type_): _description_
+            word (_str_): Input word to be stemmed
 
         Returns:
-            _type_: _description_
+            _str_: stemmed word
         """
         if not word:
             return word
@@ -434,7 +434,7 @@ def linear_boolean_search(term, collection, stopword_filtered=False, stemmed=Fal
         term (str): The term to search for.
         collection (list[Document]): List of Document objects.
         stopword_filtered (bool): If True, use doc.filtered_terms instead of raw terms.
-
+        stemmed (bool): If True, search is performed on stemmed terms.
     Returns:
         list[tuple[int, Document]]: List of tuples of relevance score and Document.
     """
@@ -469,16 +469,16 @@ def get_term_freq(terms):
     
 
 def vector_space_search(query, collection, stopword_filtered=False, stemmed=False):
-    """_summary_
+    """ Performs TF IDF vector space search.
 
     Args:
-        query (_type_): _description_
-        collection (_type_): _description_
-        stopword_filtered (bool, optional): _description_. Defaults to False.
-        stemmed (bool, optional): _description_. Defaults to False.
+        query (_str_): Query String
+        collection (_doc : Document_): Collection of documents
+        stopword_filtered (bool, optional):  Defaults to False.
+        stemmed (bool, optional):  Defaults to False.
 
     Returns:
-        _type_: _description_
+        list[tuple[int, Document]]: List of tuples of relevance score and Document.
     """
     N = len(collection)
     
