@@ -471,7 +471,12 @@ def get_term_freq(terms):
 def vector_space_search(query, collection, stopword_filtered=False, stemmed=False):
     """ Performs TF IDF vector space search.
 
+
     Args:
+        query (_str_): Query String
+        collection (_doc_): Collection of documents
+        stopword_filtered (bool, optional):  Defaults to False.
+        stemmed (bool, optional): . Defaults to False.
         query (_str_): Query String
         collection (_doc : Document_): Collection of documents
         stopword_filtered (bool, optional):  Defaults to False.
