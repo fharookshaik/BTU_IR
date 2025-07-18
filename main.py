@@ -2,7 +2,7 @@
 # This file is a part of Information Retreival system that allows users to interact with parsed documents and search for relevant information based on user queries.
 
 from document import Document
-from my_module import load_collection_from_url, remove_stop_words, remove_stop_words_by_frequency, linear_boolean_search
+from my_module import load_collection_from_url, remove_stop_words, remove_stop_words_by_frequency, linear_boolean_search, vector_space_search
 import re
 import os
 
@@ -143,20 +143,55 @@ class TerminalUI:
         if not self.documents:
             print("\n⚠️ Please parse documents first.")
             return
+        
+        while True:
+            print("\n--- Search Documents ---")
+            print("\n🔍 Select the search algorithm")
+            print("\n1. Linear Boolean Search")
+            print("\n2. TF IDF Vector Space Search")
 
-        term = input("\nEnter a search term: ").strip().lower()
-        if not term:
-            print("❌ Search term cannot be empty.")
-            return
+            choice = input("\nSelect an action (1–2): ").strip()
+            
+            linear_search = False
+            vector_search = False 
 
-        try:
-            results = linear_boolean_search(term=term, collection=self.documents, stopword_filtered=False)
-            print(f"\n🔍 Results for '{term}': {len(results)} found.")
-            print(f'- Doc_ID : Relevance Score')
-            for score, doc in results:
-                print(f" - {doc} : {score}")
-        except Exception as e:
-            print(f"❌ Error during search: {e}")
+            
+            if choice == '1':
+                linear_search = True
+                
+            elif choice == '2':
+                vector_search = True
+            
+            else:
+                print("❌ Invalid choice. Please enter a number from 1 to 2.")
+                continue
+                        
+            term = input("\nEnter a search term: ").strip().lower()
+            if not term:
+                print("❌ Search term cannot be empty.")
+                return
+
+            results = []
+            try:
+                if linear_search:
+                    results = linear_boolean_search(term=term, collection=self.documents, stopword_filtered=False)
+                    
+
+                elif vector_search:
+                    results = vector_space_search(query=term, collection=self.documents, stopword_filtered=False)
+
+
+                results = [(score, doc) for score, doc in results if score != 0]
+                results.sort(key=lambda x: x[0], reverse=True)
+
+                print(f"\n🔍 Results for '{term}': {len(results)} found.")
+                print(f'- Doc_ID : Relevance Score')
+                for score, doc in results:
+                    print(f" - {doc} : {score}")
+                
+                return
+            except Exception as e:
+                print(f"❌ Error during search: {e}")
 
     def stopword_removal(self):
         """
