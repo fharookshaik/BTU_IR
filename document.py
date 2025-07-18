@@ -45,4 +45,4 @@ class Document(object):
     def filtered_stemmed_terms(self):
         """Returns the list of terms in the document after filtering and stemming
         """
-        return self.filtered_stemmed_terms
+        return self._filtered_stemmed_terms

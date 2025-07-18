@@ -272,10 +272,10 @@ class PorterStemmer:
     
 
     def stem(self, word):
-        """ Stem the work based on the Porter rules.
+        """Stem the word based on the Porter Stemmer Rules
 
         Args:
-            word (_str_): _description_
+            word (_str_): Input word to be stemmed
 
         Returns:
             _str_: stemmed word
@@ -434,7 +434,7 @@ def linear_boolean_search(term, collection, stopword_filtered=False, stemmed=Fal
         term (str): The term to search for.
         collection (list[Document]): List of Document objects.
         stopword_filtered (bool): If True, use doc.filtered_terms instead of raw terms.
-
+        stemmed (bool): If True, search is performed on stemmed terms.
     Returns:
         list[tuple[int, Document]]: List of tuples of relevance score and Document.
     """
@@ -477,6 +477,10 @@ def vector_space_search(query, collection, stopword_filtered=False, stemmed=Fals
         collection (_doc_): Collection of documents
         stopword_filtered (bool, optional):  Defaults to False.
         stemmed (bool, optional): . Defaults to False.
+        query (_str_): Query String
+        collection (_doc : Document_): Collection of documents
+        stopword_filtered (bool, optional):  Defaults to False.
+        stemmed (bool, optional):  Defaults to False.
 
     Returns:
         list[tuple[int, Document]]: List of tuples of relevance score and Document.
