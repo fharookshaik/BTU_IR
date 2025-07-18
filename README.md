@@ -1,25 +1,30 @@
 # BTU_IR
 
-Terminal-based application for processing and searching document collections with advanced information retrieval capabilities.
+Terminal-based application for processing and searching document collections with information retrieval capabilities.
 
-_*This project is a part of Information Retreival Course taught in BTU Cottbus-Senftenberg_
+_*This project is a part of the Information Retrieval Course taught at BTU Cottbus-Senftenberg._
 
 ## Features
-- 📥 Download & parse text collections from URLs using regex patterns
-- 📚 View parsed documents with metadata (author, origin, content preview)
-- 🔍 Perform searches using multiple algorithms:
+
+- **Interactive CLI**: A user-friendly menu-driven interface for easy operation.
+- **Dynamic Document Parsing**: Fetch and parse text collections from any URL. Users can define document boundaries using line numbers and regular expressions.
+- **Multiple Search Algorithms**:
   - **Linear Boolean Search**: Simple term matching.
   - **TF-IDF Vector Space Search**: Ranked retrieval based on term relevance.
-- 🛑 Stopword removal using:
-  - Predefined stopword lists (`helpers/stopwords.txt`)
-  - Frequency-based filtering (JC Crouch method)
-- 🌳 **Porter Stemming**: Reduces words to their root form for more effective searching.
+- **Flexible Stopword Removal**:
+  - **List-based**: Filter common words using a default list or a user-provided file.
+  - **Frequency-based**: Dynamically identify and remove terms that are either too common or too rare across the collection.
+- **Search Evaluation**: For pre-configured demo cases, the system calculates and displays precision and recall scores against a ground truth dataset.
+- **Porter Stemmer**: Includes a backend implementation of the Porter Stemming algorithm to reduce words to their root form.
+- **Demo Mode**: Quickly load and test the system with pre-configured collections like **Aesop's Fables** or **Grimms' Fairy Tales**.
 
 ## Requirements
+
 - Python 3.10+
-- Dependencies: None (standard library only)
+- No external libraries required.
 
 ## Installation
+
 ```bash
 git clone https://github.com/fharookshaik/BTU_IR.git
 cd BTU_IR
@@ -43,7 +48,7 @@ Origin: Aesops Fables
 
 2. **Search Documents:**
 ```python
-Enter search term: darcy
+Enter search term: fox
 Results: 45 matches across documents
 ```
 
@@ -77,9 +82,8 @@ BTU_IR/
 │   ├── test_pr02_t4.py
 │   ├── test_pr03_t1.py
 │   ├── test_pr03_t2.py
-│   └── test_pr03_t3.py
-├── task_3.py               
-└── test_wrapper.py     # Test harness
+│   └── test_pr03_t3.py               
+└── test_wrapper.py     # Test wrapper
 ```
 
 ## Testing
